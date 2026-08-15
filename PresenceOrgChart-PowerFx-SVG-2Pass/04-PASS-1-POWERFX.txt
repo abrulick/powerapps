@@ -1,0 +1,438 @@
+// ======================================================================
+// PASS 1 — FUNCTIONAL FULL-TREE RENDERER
+// US-style Power Fx separators shown.
+// ======================================================================
+
+// ----------------------------------------------------------------------
+// scrOrgChart.OnVisible
+// ----------------------------------------------------------------------
+Set(varSelectedDate, If(IsBlank(varSelectedDate), Today(), varSelectedDate));
+Set(varNodeWidth, 220);
+Set(varNodeHeight, 92);
+Set(varXGap, 44);
+Set(varYGap, 76);
+Set(varChartMargin, 50);
+Set(varSelectedEmployeeKey, Blank());
+Set(varLocationFilter, "All Locations");
+Set(varZoom, 1);
+Set(varViewCenterX, 0);
+Set(varViewCenterY, 0);
+Select(btnBuildChart);
+
+// dpPresenceDate.DefaultDate
+varSelectedDate
+
+// dpPresenceDate.OnChange
+Set(varSelectedDate, dpPresenceDate.SelectedDate);
+Select(btnBuildChart);
+
+// ----------------------------------------------------------------------
+// btnBuildChart.OnSelect
+// ----------------------------------------------------------------------
+
+// 1) Monday of selected week
+Set(
+    varWeekStart,
+    DateAdd(
+        varSelectedDate,
+        1 - Weekday(varSelectedDate, StartOfWeek.Monday),
+        TimeUnit.Days
+    )
+);
+
+Set(
+    varUnsupportedSelectedDay,
+    Weekday(varSelectedDate, StartOfWeek.Monday) > 5
+);
+
+// 2) Build selected-day projection from the selected week's rows.
+// The simple Filter on Date (Mon) is the source-side reduction.
+ClearCollect(
+    colPresence,
+    With(
+        {
+            weekRows: Filter('Weekly Org Tracker', 'Date (Mon)' = varWeekStart),
+            selectedDay: Weekday(varSelectedDate, StartOfWeek.Monday)
+        },
+        Switch(
+            selectedDay,
+            1,
+            AddColumns(
+                weekRows As wk,
+                EmployeeKey, Lower(wk.'Employee Name'.Email),
+                EmployeeName, wk.'Employee Name'.DisplayName,
+                ManagerKey, If(IsBlank(wk.'Manager Name'.Email), Blank(), Lower(wk.'Manager Name'.Email)),
+                ManagerName, wk.'Manager Name'.DisplayName,
+                WorkDate, wk.'Date (Mon)',
+                WorkType, wk.'Work Type (Mon)'.Value,
+                WorkLocation, wk.'Location (Mon)'.Value,
+                PresenceStatus,
+                    If(
+                        wk.'Work Type (Mon)'.Value = "In-Person" && IsBlank(wk.'Location (Mon)'.Value),
+                        "Location Missing",
+                        wk.'Work Type (Mon)'.Value
+                    ),
+                PresenceText,
+                    Switch(
+                        wk.'Work Type (Mon)'.Value,
+                        "In-Person", If(IsBlank(wk.'Location (Mon)'.Value), "In Person — Location Missing", "In Person — " & wk.'Location (Mon)'.Value),
+                        "Remote", "Remote",
+                        "Vacation", "Vacation",
+                        "Sick", "Sick",
+                        "Holiday", "Holiday",
+                        "Unknown"
+                    )
+            ),
+            2,
+            AddColumns(
+                weekRows As wk,
+                EmployeeKey, Lower(wk.'Employee Name'.Email),
+                EmployeeName, wk.'Employee Name'.DisplayName,
+                ManagerKey, If(IsBlank(wk.'Manager Name'.Email), Blank(), Lower(wk.'Manager Name'.Email)),
+                ManagerName, wk.'Manager Name'.DisplayName,
+                WorkDate, wk.'Date (Tue)',
+                WorkType, wk.'Work Type (Tue)'.Value,
+                WorkLocation, wk.'Location (Tue)'.Value,
+                PresenceStatus,
+                    If(wk.'Work Type (Tue)'.Value = "In-Person" && IsBlank(wk.'Location (Tue)'.Value), "Location Missing", wk.'Work Type (Tue)'.Value),
+                PresenceText,
+                    Switch(
+                        wk.'Work Type (Tue)'.Value,
+                        "In-Person", If(IsBlank(wk.'Location (Tue)'.Value), "In Person — Location Missing", "In Person — " & wk.'Location (Tue)'.Value),
+                        "Remote", "Remote", "Vacation", "Vacation", "Sick", "Sick", "Holiday", "Holiday", "Unknown"
+                    )
+            ),
+            3,
+            AddColumns(
+                weekRows As wk,
+                EmployeeKey, Lower(wk.'Employee Name'.Email),
+                EmployeeName, wk.'Employee Name'.DisplayName,
+                ManagerKey, If(IsBlank(wk.'Manager Name'.Email), Blank(), Lower(wk.'Manager Name'.Email)),
+                ManagerName, wk.'Manager Name'.DisplayName,
+                WorkDate, wk.'Date (Wed)',
+                WorkType, wk.'Work Type (Wed)'.Value,
+                WorkLocation, wk.'Location (Wed)'.Value,
+                PresenceStatus,
+                    If(wk.'Work Type (Wed)'.Value = "In-Person" && IsBlank(wk.'Location (Wed)'.Value), "Location Missing", wk.'Work Type (Wed)'.Value),
+                PresenceText,
+                    Switch(
+                        wk.'Work Type (Wed)'.Value,
+                        "In-Person", If(IsBlank(wk.'Location (Wed)'.Value), "In Person — Location Missing", "In Person — " & wk.'Location (Wed)'.Value),
+                        "Remote", "Remote", "Vacation", "Vacation", "Sick", "Sick", "Holiday", "Holiday", "Unknown"
+                    )
+            ),
+            4,
+            AddColumns(
+                weekRows As wk,
+                EmployeeKey, Lower(wk.'Employee Name'.Email),
+                EmployeeName, wk.'Employee Name'.DisplayName,
+                ManagerKey, If(IsBlank(wk.'Manager Name'.Email), Blank(), Lower(wk.'Manager Name'.Email)),
+                ManagerName, wk.'Manager Name'.DisplayName,
+                WorkDate, wk.'Date (Thu)',
+                WorkType, wk.'Work Type (Thu)'.Value,
+                WorkLocation, wk.'Location (Thu)'.Value,
+                PresenceStatus,
+                    If(wk.'Work Type (Thu)'.Value = "In-Person" && IsBlank(wk.'Location (Thu)'.Value), "Location Missing", wk.'Work Type (Thu)'.Value),
+                PresenceText,
+                    Switch(
+                        wk.'Work Type (Thu)'.Value,
+                        "In-Person", If(IsBlank(wk.'Location (Thu)'.Value), "In Person — Location Missing", "In Person — " & wk.'Location (Thu)'.Value),
+                        "Remote", "Remote", "Vacation", "Vacation", "Sick", "Sick", "Holiday", "Holiday", "Unknown"
+                    )
+            ),
+            5,
+            AddColumns(
+                weekRows As wk,
+                EmployeeKey, Lower(wk.'Employee Name'.Email),
+                EmployeeName, wk.'Employee Name'.DisplayName,
+                ManagerKey, If(IsBlank(wk.'Manager Name'.Email), Blank(), Lower(wk.'Manager Name'.Email)),
+                ManagerName, wk.'Manager Name'.DisplayName,
+                WorkDate, wk.'Date (Fri)',
+                WorkType, wk.'Work Type (Fri)'.Value,
+                WorkLocation, wk.'Location (Fri)'.Value,
+                PresenceStatus,
+                    If(wk.'Work Type (Fri)'.Value = "In-Person" && IsBlank(wk.'Location (Fri)'.Value), "Location Missing", wk.'Work Type (Fri)'.Value),
+                PresenceText,
+                    Switch(
+                        wk.'Work Type (Fri)'.Value,
+                        "In-Person", If(IsBlank(wk.'Location (Fri)'.Value), "In Person — Location Missing", "In Person — " & wk.'Location (Fri)'.Value),
+                        "Remote", "Remote", "Vacation", "Vacation", "Sick", "Sick", "Holiday", "Holiday", "Unknown"
+                    )
+            ),
+            // Weekend: return an empty table of the correct rough shape.
+            Filter(
+                AddColumns(
+                    weekRows,
+                    EmployeeKey, Blank(), EmployeeName, Blank(), ManagerKey, Blank(), ManagerName, Blank(),
+                    WorkDate, Blank(), WorkType, Blank(), WorkLocation, Blank(), PresenceStatus, Blank(), PresenceText, Blank()
+                ),
+                false
+            )
+        )
+    )
+);
+
+ClearCollect(colPresenceValid, Filter(colPresence, !IsBlank(EmployeeKey)));
+
+// 3) Root level
+ClearCollect(
+    colLevel0,
+    ForAll(
+        SortByColumns(
+            Filter(
+                colPresenceValid As employee,
+                IsBlank(employee.ManagerKey) ||
+                IsBlank(LookUp(colPresenceValid, EmployeeKey = employee.ManagerKey, EmployeeKey))
+            ),
+            "EmployeeName",
+            SortOrder.Ascending
+        ) As root,
+        {
+            EmployeeKey: root.EmployeeKey,
+            EmployeeName: root.EmployeeName,
+            ManagerKey: root.ManagerKey,
+            ManagerName: root.ManagerName,
+            WorkType: root.WorkType,
+            WorkLocation: root.WorkLocation,
+            PresenceStatus: root.PresenceStatus,
+            PresenceText: root.PresenceText,
+            Level: 0,
+            PathKey: "/" & root.EmployeeKey & "/",
+            SortPath: "/" & Lower(root.EmployeeName) & "|" & root.EmployeeKey & "/"
+        }
+    )
+);
+
+// Helper pattern: every next level finds children of the prior level.
+// LEVEL 1
+ClearCollect(
+    colLevel1,
+    ForAll(
+        SortByColumns(Filter(colPresenceValid As child, !IsBlank(LookUp(colLevel0, EmployeeKey = child.ManagerKey, EmployeeKey))), "EmployeeName", SortOrder.Ascending) As child,
+        With({parent: LookUp(colLevel0, EmployeeKey = child.ManagerKey)},
+            {EmployeeKey: child.EmployeeKey, EmployeeName: child.EmployeeName, ManagerKey: child.ManagerKey, ManagerName: child.ManagerName,
+             WorkType: child.WorkType, WorkLocation: child.WorkLocation, PresenceStatus: child.PresenceStatus, PresenceText: child.PresenceText,
+             Level: 1, PathKey: parent.PathKey & child.EmployeeKey & "/",
+             SortPath: parent.SortPath & Lower(child.EmployeeName) & "|" & child.EmployeeKey & "/"}
+        )
+    )
+);
+
+// LEVEL 2
+ClearCollect(
+    colLevel2,
+    ForAll(
+        SortByColumns(Filter(colPresenceValid As child, !IsBlank(LookUp(colLevel1, EmployeeKey = child.ManagerKey, EmployeeKey))), "EmployeeName", SortOrder.Ascending) As child,
+        With({parent: LookUp(colLevel1, EmployeeKey = child.ManagerKey)},
+            {EmployeeKey: child.EmployeeKey, EmployeeName: child.EmployeeName, ManagerKey: child.ManagerKey, ManagerName: child.ManagerName,
+             WorkType: child.WorkType, WorkLocation: child.WorkLocation, PresenceStatus: child.PresenceStatus, PresenceText: child.PresenceText,
+             Level: 2, PathKey: parent.PathKey & child.EmployeeKey & "/",
+             SortPath: parent.SortPath & Lower(child.EmployeeName) & "|" & child.EmployeeKey & "/"}
+        )
+    )
+);
+
+// LEVEL 3
+ClearCollect(
+    colLevel3,
+    ForAll(
+        SortByColumns(Filter(colPresenceValid As child, !IsBlank(LookUp(colLevel2, EmployeeKey = child.ManagerKey, EmployeeKey))), "EmployeeName", SortOrder.Ascending) As child,
+        With({parent: LookUp(colLevel2, EmployeeKey = child.ManagerKey)},
+            {EmployeeKey: child.EmployeeKey, EmployeeName: child.EmployeeName, ManagerKey: child.ManagerKey, ManagerName: child.ManagerName,
+             WorkType: child.WorkType, WorkLocation: child.WorkLocation, PresenceStatus: child.PresenceStatus, PresenceText: child.PresenceText,
+             Level: 3, PathKey: parent.PathKey & child.EmployeeKey & "/",
+             SortPath: parent.SortPath & Lower(child.EmployeeName) & "|" & child.EmployeeKey & "/"}
+        )
+    )
+);
+
+// LEVEL 4
+ClearCollect(
+    colLevel4,
+    ForAll(
+        SortByColumns(Filter(colPresenceValid As child, !IsBlank(LookUp(colLevel3, EmployeeKey = child.ManagerKey, EmployeeKey))), "EmployeeName", SortOrder.Ascending) As child,
+        With({parent: LookUp(colLevel3, EmployeeKey = child.ManagerKey)},
+            {EmployeeKey: child.EmployeeKey, EmployeeName: child.EmployeeName, ManagerKey: child.ManagerKey, ManagerName: child.ManagerName,
+             WorkType: child.WorkType, WorkLocation: child.WorkLocation, PresenceStatus: child.PresenceStatus, PresenceText: child.PresenceText,
+             Level: 4, PathKey: parent.PathKey & child.EmployeeKey & "/",
+             SortPath: parent.SortPath & Lower(child.EmployeeName) & "|" & child.EmployeeKey & "/"}
+        )
+    )
+);
+
+// LEVEL 5
+ClearCollect(
+    colLevel5,
+    ForAll(
+        SortByColumns(Filter(colPresenceValid As child, !IsBlank(LookUp(colLevel4, EmployeeKey = child.ManagerKey, EmployeeKey))), "EmployeeName", SortOrder.Ascending) As child,
+        With({parent: LookUp(colLevel4, EmployeeKey = child.ManagerKey)},
+            {EmployeeKey: child.EmployeeKey, EmployeeName: child.EmployeeName, ManagerKey: child.ManagerKey, ManagerName: child.ManagerName,
+             WorkType: child.WorkType, WorkLocation: child.WorkLocation, PresenceStatus: child.PresenceStatus, PresenceText: child.PresenceText,
+             Level: 5, PathKey: parent.PathKey & child.EmployeeKey & "/",
+             SortPath: parent.SortPath & Lower(child.EmployeeName) & "|" & child.EmployeeKey & "/"}
+        )
+    )
+);
+
+// LEVEL 6
+ClearCollect(
+    colLevel6,
+    ForAll(
+        SortByColumns(Filter(colPresenceValid As child, !IsBlank(LookUp(colLevel5, EmployeeKey = child.ManagerKey, EmployeeKey))), "EmployeeName", SortOrder.Ascending) As child,
+        With({parent: LookUp(colLevel5, EmployeeKey = child.ManagerKey)},
+            {EmployeeKey: child.EmployeeKey, EmployeeName: child.EmployeeName, ManagerKey: child.ManagerKey, ManagerName: child.ManagerName,
+             WorkType: child.WorkType, WorkLocation: child.WorkLocation, PresenceStatus: child.PresenceStatus, PresenceText: child.PresenceText,
+             Level: 6, PathKey: parent.PathKey & child.EmployeeKey & "/",
+             SortPath: parent.SortPath & Lower(child.EmployeeName) & "|" & child.EmployeeKey & "/"}
+        )
+    )
+);
+
+// 4) Combine levels
+Clear(colOrgNodes);
+Collect(colOrgNodes, colLevel0, colLevel1, colLevel2, colLevel3, colLevel4, colLevel5, colLevel6);
+Set(varUnplacedEmployees, CountRows(colPresenceValid) - CountRows(colOrgNodes));
+
+// 5) Leaves
+ClearCollect(
+    colLeavesBase,
+    SortByColumns(
+        Filter(colOrgNodes As employee, CountIf(colOrgNodes, ManagerKey = employee.EmployeeKey) = 0),
+        "SortPath",
+        SortOrder.Ascending
+    )
+);
+
+// 6) Deterministic leaf X positions
+ClearCollect(
+    colLeaves,
+    ForAll(
+        Sequence(CountRows(colLeavesBase)) As seq,
+        With({leaf: Index(colLeavesBase, seq.Value)},
+            {
+                EmployeeKey: leaf.EmployeeKey, EmployeeName: leaf.EmployeeName,
+                ManagerKey: leaf.ManagerKey, ManagerName: leaf.ManagerName,
+                WorkType: leaf.WorkType, WorkLocation: leaf.WorkLocation,
+                PresenceStatus: leaf.PresenceStatus, PresenceText: leaf.PresenceText,
+                Level: leaf.Level, PathKey: leaf.PathKey, SortPath: leaf.SortPath,
+                LeafIndex: seq.Value,
+                LeafX: varChartMargin + varNodeWidth / 2 + (seq.Value - 1) * (varNodeWidth + varXGap)
+            }
+        )
+    )
+);
+
+// 7) Layout: every manager centers over all descendant leaves
+ClearCollect(
+    colLayout,
+    AddColumns(
+        colOrgNodes As node,
+        DirectReportCount, CountIf(colOrgNodes, ManagerKey = node.EmployeeKey),
+        NodeX, Average(Filter(colLeaves As leaf, StartsWith(leaf.PathKey, node.PathKey)), LeafX),
+        NodeY, varChartMargin + node.Level * (varNodeHeight + varYGap)
+    )
+);
+
+Set(varChartWidth, Max(800, Max(colLayout, NodeX) + varNodeWidth / 2 + varChartMargin));
+Set(varChartHeight, Max(500, Max(colLayout, NodeY) + varNodeHeight + varChartMargin));
+
+// 8) Connector markup
+Set(
+    varSvgConnectors,
+    Concat(
+        Filter(colLayout As child, !IsBlank(LookUp(colLayout, EmployeeKey = child.ManagerKey, EmployeeKey))),
+        With({parent: LookUp(colLayout, EmployeeKey = child.ManagerKey)},
+            With(
+                {
+                    startX: parent.NodeX,
+                    startY: parent.NodeY + varNodeHeight,
+                    endX: child.NodeX,
+                    endY: child.NodeY,
+                    midY: (parent.NodeY + varNodeHeight + child.NodeY) / 2
+                },
+                "<path d='M " & Text(startX,"[$-en-US]0.##") & " " & Text(startY,"[$-en-US]0.##") &
+                " C " & Text(startX,"[$-en-US]0.##") & " " & Text(midY,"[$-en-US]0.##") & ", " &
+                Text(endX,"[$-en-US]0.##") & " " & Text(midY,"[$-en-US]0.##") & ", " &
+                Text(endX,"[$-en-US]0.##") & " " & Text(endY,"[$-en-US]0.##") &
+                "' fill='none' stroke='#B8B8B8' stroke-width='2' />"
+            )
+        )
+    )
+);
+
+// 9) Node markup
+Set(
+    varSvgNodes,
+    Concat(
+        colLayout As node,
+        With(
+            {
+                cardX: node.NodeX - varNodeWidth / 2,
+                cardY: node.NodeY,
+                statusColor:
+                    Switch(
+                        node.PresenceStatus,
+                        "In-Person", "#107C10",
+                        "Remote", "#0078D4",
+                        "Vacation", "#8764B8",
+                        "Sick", "#D83B01",
+                        "Holiday", "#5C2D91",
+                        "Location Missing", "#A4262C",
+                        "#605E5C"
+                    )
+            },
+            "<g>" &
+            "<rect x='" & Text(cardX,"[$-en-US]0.##") & "' y='" & Text(cardY,"[$-en-US]0.##") &
+                "' width='" & Text(varNodeWidth,"[$-en-US]0.##") & "' height='" & Text(varNodeHeight,"[$-en-US]0.##") &
+                "' rx='10' fill='#FFFFFF' stroke='#D2D0CE' stroke-width='1' />" &
+            "<rect x='" & Text(cardX,"[$-en-US]0.##") & "' y='" & Text(cardY,"[$-en-US]0.##") &
+                "' width='7' height='" & Text(varNodeHeight,"[$-en-US]0.##") & "' rx='4' fill='" & statusColor & "' />" &
+            "<text x='" & Text(cardX+18,"[$-en-US]0.##") & "' y='" & Text(cardY+27,"[$-en-US]0.##") &
+                "' font-family='Segoe UI,Arial,sans-serif' font-size='15' font-weight='600' fill='#201F1E'>" &
+                EncodeHTML(node.EmployeeName) & "</text>" &
+            "<text x='" & Text(cardX+18,"[$-en-US]0.##") & "' y='" & Text(cardY+53,"[$-en-US]0.##") &
+                "' font-family='Segoe UI,Arial,sans-serif' font-size='12' fill='#323130'>" &
+                EncodeHTML(node.PresenceText) & "</text>" &
+            "<text x='" & Text(cardX+18,"[$-en-US]0.##") & "' y='" & Text(cardY+76,"[$-en-US]0.##") &
+                "' font-family='Segoe UI,Arial,sans-serif' font-size='11' fill='#605E5C'>" &
+                EncodeHTML(If(node.DirectReportCount=0,"Individual contributor",node.DirectReportCount & If(node.DirectReportCount=1," direct report"," direct reports"))) &
+                "</text></g>"
+        )
+    )
+);
+
+// 10) Assemble SVG
+Set(
+    varOrgChartSvg,
+    "<svg xmlns='http://www.w3.org/2000/svg' width='" & Text(varChartWidth,"[$-en-US]0.##") &
+    "' height='" & Text(varChartHeight,"[$-en-US]0.##") &
+    "' viewBox='0 0 " & Text(varChartWidth,"[$-en-US]0.##") & " " & Text(varChartHeight,"[$-en-US]0.##") & "'>" &
+    "<rect width='100%' height='100%' fill='#FAFAFA' />" & varSvgConnectors & varSvgNodes & "</svg>"
+);
+
+// ----------------------------------------------------------------------
+// imgOrgChart.Image
+// ----------------------------------------------------------------------
+"data:image/svg+xml;utf8," & EncodeUrl(varOrgChartSvg)
+
+// imgOrgChart.ImagePosition
+ImagePosition.Fit
+
+// lblTreeWarning.Visible
+varUnsupportedSelectedDay || varUnplacedEmployees > 0
+
+// lblTreeWarning.Text
+If(
+    varUnsupportedSelectedDay,
+    "Select a Monday–Friday date.",
+    varUnplacedEmployees > 0,
+    varUnplacedEmployees & " employee(s) could not be positioned. Check hierarchy depth, manager relationships, duplicate rows, or cycles.",
+    ""
+)
+
+// lblStatus.Text
+If(
+    varUnsupportedSelectedDay,
+    "No weekday chart built.",
+    CountRows(colPresenceValid) & " employees • " & CountRows(colLeaves) & " leaf nodes • " & CountRows(colLevel0) & " local root(s)"
+)
