@@ -1,0 +1,31 @@
+// btnPreviousDay.OnSelect
+// Monday goes back three calendar days to Friday; all other weekdays go back one.
+
+Set(
+    varSelectedDate,
+    DateAdd(
+        varSelectedDate,
+        If(
+            Weekday(varSelectedDate, StartOfWeek.Monday) = 1,
+            -3,
+            -1
+        ),
+        TimeUnit.Days
+    )
+);
+
+Set(
+    varWeekStart,
+    DateAdd(
+        varSelectedDate,
+        1 - Weekday(varSelectedDate, StartOfWeek.Monday),
+        TimeUnit.Days
+    )
+);
+
+Reset(dpPresenceDate);
+
+// Clear selected-person UI so the details never show a stale date.
+Set(varSelectedEmployeeKey, Blank());
+Set(varSelectedEmployeeName, Blank());
+Set(varSelectedPresenceText, Blank())

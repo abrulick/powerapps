@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<manifest>
+  <control
+    namespace="OrgPresence"
+    constructor="PresenceOrgChart"
+    version="1.0.0"
+    display-name-key="Presence Org Chart"
+    description-key="Full-tree presence-aware organization chart for canvas apps"
+    control-type="standard">
+
+    <data-set
+      name="OrgData"
+      display-name-key="Organization data" />
+
+    <property
+      name="SelectedEmployeeKey"
+      display-name-key="Selected employee key"
+      description-key="Email/key of the selected employee"
+      of-type="SingleLine.Text"
+      usage="output" />
+
+    <property
+      name="SelectedEmployeeName"
+      display-name-key="Selected employee name"
+      description-key="Display name of the selected employee"
+      of-type="SingleLine.Text"
+      usage="output" />
+
+    <property
+      name="SelectedPresenceText"
+      display-name-key="Selected presence text"
+      description-key="Resolved presence text for the selected employee"
+      of-type="SingleLine.Text"
+      usage="output" />
+
+    <resources>
+      <code path="index.ts" order="1" />
+      <css path="css/PresenceOrgChart.css" order="1" />
+    </resources>
+  </control>
+</manifest>

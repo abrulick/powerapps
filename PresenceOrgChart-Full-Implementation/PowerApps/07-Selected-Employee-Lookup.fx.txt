@@ -1,0 +1,12 @@
+// OPTIONAL: Use this formula as the Items/record source for a selected-person
+// details experience if you need the original weekly SharePoint row.
+//
+// Both filters are delegable for SharePoint: DateTime comparisons and the
+// Person.Email subfield. This avoids depending on a local collection.
+
+LookUp(
+    'Weekly Org Tracker',
+    'Date (Mon)' >= varWeekStart &&
+    'Date (Mon)' < DateAdd(varWeekStart, 1, TimeUnit.Days) &&
+    'Employee Name'.Email = varSelectedEmployeeKey
+)

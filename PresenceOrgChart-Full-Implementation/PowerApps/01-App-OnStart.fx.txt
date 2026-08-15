@@ -1,0 +1,27 @@
+// App.OnStart
+// Defaults to today on weekdays and the previous Friday on weekends.
+
+Set(
+    varSelectedDate,
+    With(
+        { wd: Weekday(Today(), StartOfWeek.Monday) },
+        If(
+            wd <= 5,
+            Today(),
+            DateAdd(Today(), 5 - wd, TimeUnit.Days)
+        )
+    )
+);
+
+Set(
+    varWeekStart,
+    DateAdd(
+        varSelectedDate,
+        1 - Weekday(varSelectedDate, StartOfWeek.Monday),
+        TimeUnit.Days
+    )
+);
+
+Set(varSelectedEmployeeKey, Blank());
+Set(varSelectedEmployeeName, Blank());
+Set(varSelectedPresenceText, Blank())
