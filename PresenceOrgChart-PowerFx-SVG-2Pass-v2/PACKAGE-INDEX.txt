@@ -1,0 +1,20 @@
+PresenceOrgChart Power Fx + SVG — 2-Pass Package v2
+=======================================================
+
+AUTHORITATIVE BUILD ORDER: 11-IMPLEMENTATION-SEQUENCE.md
+
+00-START-HERE.md                           2282 bytes
+01-ARCHITECTURE-AND-ASSUMPTIONS.md         2569 bytes
+02-CONTROL-MAP.md                          1439 bytes
+03-PASS-1-IMPLEMENTATION.md                5462 bytes
+04-PASS-1-POWERFX.txt                     19988 bytes
+05-PASS-2-IMPLEMENTATION.md                4689 bytes
+06-PASS-2-POWERFX.txt                      4553 bytes
+07-TEST-PLAN.md                            2452 bytes
+08-TROUBLESHOOTING.md                      2413 bytes
+09-DEPLOYMENT-CHECKLIST.md                 1725 bytes
+10-OFFICIAL-MICROSOFT-REFERENCES.md        1748 bytes
+11-IMPLEMENTATION-SEQUENCE.md             16579 bytes
+12-DATA-CONTRACT.md                        1255 bytes
+13-REVISION-NOTES-v2.md                     674 bytes
+PACKAGE-INDEX.txt                           807 bytes
