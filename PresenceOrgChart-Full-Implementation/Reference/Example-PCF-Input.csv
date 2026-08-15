@@ -1,6 +1,0 @@
-EmployeeKey,EmployeeName,ManagerKey,ManagerName,WorkType,WorkLocation,PresenceStatus,PresenceText
-robert@contoso.com,Robert Anderson,executive@contoso.com,Executive Leader,In-Person,New York,In-Person,In Person — New York
-jane@contoso.com,Jane Smith,robert@contoso.com,Robert Anderson,Remote,,Remote,Remote
-michael@contoso.com,Michael Jones,robert@contoso.com,Robert Anderson,In-Person,Boston,In-Person,In Person — Boston
-susan@contoso.com,Susan Lee,robert@contoso.com,Robert Anderson,Vacation,,Vacation,Vacation
-amy@contoso.com,Amy Green,jane@contoso.com,Jane Smith,In-Person,New York,In-Person,In Person — New York

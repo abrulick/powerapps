@@ -1,6 +1,0 @@
-// pcfOrgChart.OnChange
-// The PCF exposes three output properties when a user selects a node.
-
-Set(varSelectedEmployeeKey, pcfOrgChart.SelectedEmployeeKey);
-Set(varSelectedEmployeeName, pcfOrgChart.SelectedEmployeeName);
-Set(varSelectedPresenceText, pcfOrgChart.SelectedPresenceText)
