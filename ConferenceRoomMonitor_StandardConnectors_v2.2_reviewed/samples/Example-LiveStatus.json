@@ -1,0 +1,16 @@
+{
+  "schema": "crm.status.v2.2",
+  "appVersion": "2.2",
+  "correlationId": "00000000-0000-0000-0000-000000000001",
+  "snapshotUtc": "2026-08-16T17:30:00Z",
+  "rooms": [
+    {
+      "roomListName": "HQ",
+      "roomName": "HQ Conference 101",
+      "roomEmail": "hq-conf101@contoso.com",
+      "status": "Busy",
+      "availability": "busy",
+      "error": ""
+    }
+  ]
+}

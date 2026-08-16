@@ -1,0 +1,87 @@
+{
+  "version": "2.2-reviewed",
+  "file_count": 58,
+  "powerfx_flow_calls": [
+    "CRM01DiscoverRoomInventory",
+    "CRM03GetRoomStatusCache",
+    "CRM04FindAvailableRooms",
+    "CRM05GetRoomDayDetail",
+    "CRM06SubmitFeedback",
+    "CRM07SubmitIssue"
+  ],
+  "flow_guides": [
+    "CRM01DiscoverRoomInventory",
+    "CRM02RefreshRoomStatusCache",
+    "CRM03GetRoomStatusCache",
+    "CRM04FindAvailableRooms",
+    "CRM05GetRoomDayDetail",
+    "CRM06SubmitFeedback",
+    "CRM07SubmitIssue",
+    "CRM08EmitAvailabilitySnapshot",
+    "CRM09EmitDailyMetrics",
+    "CRM10DiagnosticCapabilities"
+  ],
+  "missing_flow_guides": [],
+  "powerfx_parenthesis_checks": {
+    "App.OnError.fx": true,
+    "App.OnStart.fx": true,
+    "Dashboard.KPIs.fx": true,
+    "Feedback.Submit.OnSelect.fx": true,
+    "FindRoom.Search.OnSelect.fx": true,
+    "Issue.Submit.OnSelect.fx": true,
+    "PeopleDemand.Display.fx": true,
+    "Reports.Open.OnSelect.fx": true,
+    "Room.OpenDetail.OnSelect.fx": true,
+    "RoomStatus.Color.fx": true,
+    "RoomStatus.Display.fx": true,
+    "btnRefreshInventory.OnSelect.fx": true,
+    "btnRefreshStatus.OnSelect.fx": true,
+    "galRooms.Items.fx": true,
+    "scrDashboard.OnVisible.fx": true,
+    "scrRoomDetail.OnVisible.fx": true,
+    "tmrStatusRefresh.OnTimerEnd.fx": true
+  },
+  "critical_checks": {
+    "App.OnStart has no Select": true,
+    "No Power Fx TimeZoneOffset remains": true,
+    "Find Room passes configured time zone": true,
+    "Room detail resolves TODAY in flow": true,
+    "Status flow does not trust client room inventory": true,
+    "Find Room flow rediscover inventory": true,
+    "Room detail validates room": true,
+    "Calendar permission wording corrected": true,
+    "Central status cache documented": true,
+    "Power BI JSON decoder present": true,
+    "Power BI daily dedupe present": true,
+    "Power Fx flow calls all have guides": true,
+    "All Power Fx files have balanced parentheses": true
+  },
+  "positive_storage_dependency_flags": [],
+  "stale_operational_hyphenated_flow_refs": [],
+  "replace_me_placeholders": [
+    {
+      "file": "docs/04-Shared-Mailbox-Protocol.md",
+      "count": 1
+    },
+    {
+      "file": "docs/01-Tenant-Prerequisites.md",
+      "count": 3
+    },
+    {
+      "file": "docs/06-PowerBI-Build.md",
+      "count": 1
+    },
+    {
+      "file": "powerfx/App.OnStart.fx",
+      "count": 2
+    },
+    {
+      "file": "powerfx/Reports.Open.OnSelect.fx",
+      "count": 1
+    },
+    {
+      "file": "powerbi/pMailbox.m",
+      "count": 1
+    }
+  ]
+}

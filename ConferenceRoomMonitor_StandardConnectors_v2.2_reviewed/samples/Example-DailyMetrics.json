@@ -1,0 +1,32 @@
+{
+  "schema": "crm.dailyMetrics.v2.2",
+  "appVersion": "2.2",
+  "correlationId": "00000000-0000-0000-0000-000000000002",
+  "metricDate": "2026-08-15",
+  "generatedUtc": "2026-08-16T05:30:00Z",
+  "timeZoneName": "Eastern Standard Time",
+  "rooms": [
+    {
+      "roomEmail": "hq-conf101@contoso.com",
+      "roomName": "HQ Conference 101",
+      "roomListName": "HQ",
+      "availableMinutes": 600,
+      "bookedMinutes": 360,
+      "meetingCount": 6,
+      "totalInvitees": 26,
+      "totalPlannedPeople": 32,
+      "peakPlannedPeople": 9,
+      "overlapDetected": false
+    }
+  ],
+  "meetings": [
+    {
+      "roomEmail": "hq-conf101@contoso.com",
+      "startUtc": "2026-08-15T13:00:00Z",
+      "endUtc": "2026-08-15T14:00:00Z",
+      "durationMinutes": 60,
+      "inviteeCount": 4,
+      "plannedPeople": 5
+    }
+  ]
+}

@@ -1,0 +1,57 @@
+Known Availability Samples =
+CALCULATE(
+    COUNTROWS(FactAvailabilitySnapshot),
+    FactAvailabilitySnapshot[Known] = TRUE()
+)
+
+Occupied Availability Samples =
+CALCULATE(
+    COUNTROWS(FactAvailabilitySnapshot),
+    FactAvailabilitySnapshot[Known] = TRUE(),
+    FactAvailabilitySnapshot[Occupied] = TRUE()
+)
+
+Sampled Utilization % =
+DIVIDE(
+    [Occupied Availability Samples],
+    [Known Availability Samples]
+)
+
+Exact Booked Minutes =
+SUM(FactRoomDaily[BookedMinutes])
+
+Exact Available Minutes =
+SUM(FactRoomDaily[AvailableMinutes])
+
+Exact Booked Utilization % =
+DIVIDE(
+    [Exact Booked Minutes],
+    [Exact Available Minutes]
+)
+
+Meetings =
+SUM(FactRoomDaily[MeetingCount])
+
+Total Invitees =
+SUM(FactRoomDaily[TotalInvitees])
+
+Total Planned People =
+SUM(FactRoomDaily[TotalPlannedPeople])
+
+Average Planned People per Meeting =
+DIVIDE(
+    [Total Planned People],
+    [Meetings]
+)
+
+Peak Planned People =
+MAX(FactRoomDaily[PeakPlannedPeople])
+
+Feedback Count =
+DISTINCTCOUNT(FactFeedback[RecordId])
+
+Average Rating =
+AVERAGE(FactFeedback[Rating])
+
+Issue Count =
+DISTINCTCOUNT(FactIssue[RecordId])

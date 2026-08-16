@@ -1,0 +1,34 @@
+{
+  "name": "ConferenceRoomMonitor_StandardConnectors",
+  "version": "2.2-reviewed",
+  "review_date": "2026-08-16",
+  "architecture": "Database-free; centralized mailbox status cache; standard Microsoft connectors",
+  "direct_graph_api": false,
+  "sharepoint": false,
+  "dataverse": false,
+  "sql": false,
+  "check_in": false,
+  "baseline": {
+    "dynamic_inventory": true,
+    "batched_availability": "Find meeting times (V2), tenant-validation required",
+    "central_status_cache": "shared Exchange mailbox",
+    "sampled_utilization": true
+  },
+  "enhanced": {
+    "calendar_detail": "requires connector-compatible shared calendar access",
+    "people_demand": true,
+    "exact_daily_metrics": true
+  },
+  "flows": [
+    "CRM01DiscoverRoomInventory",
+    "CRM02RefreshRoomStatusCache",
+    "CRM03GetRoomStatusCache",
+    "CRM04FindAvailableRooms",
+    "CRM05GetRoomDayDetail",
+    "CRM06SubmitFeedback",
+    "CRM07SubmitIssue",
+    "CRM08EmitAvailabilitySnapshot",
+    "CRM09EmitDailyMetrics",
+    "CRM10DiagnosticCapabilities"
+  ]
+}
