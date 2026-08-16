@@ -1,0 +1,16 @@
+// ======================================================================
+// SECTION 15 — OPTIONAL DIAGNOSTIC LABEL FOR MAKERS
+// ======================================================================
+//
+// Useful temporary formula while implementing:
+//
+// "Week rows: " & CountRows(colWeekRows) &
+// " | Employees: " & CountRows(colPresenceUnique) &
+// " | Org nodes: " & CountRows(colOrgNodes) &
+// " | Leaves: " & CountRows(colLeaves) &
+// " | Issues: " & CountRows(colDataIssues) &
+// " | SVG chars: " & varSvgLength &
+// " | Row safety limit: " & varLocalRowSafetyLimit
+//
+// Remove/hide before production if not needed.
+// ======================================================================

@@ -1,0 +1,16 @@
+// ======================================================================
+// SECTION 12A — lblChartMessage.Visible
+// ======================================================================
+
+varChartBuilding ||
+!IsBlank(varChartError)
+
+// ======================================================================
+// SECTION 12B — lblChartMessage.Text
+// ======================================================================
+
+If(
+    varChartBuilding,
+    "Building organization chart…",
+    varChartError
+)

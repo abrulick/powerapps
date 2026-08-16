@@ -1,0 +1,67 @@
+// ======================================================================
+// SECTION 9A — btnPrevDay.OnSelect
+// ======================================================================
+
+Set(
+    varSelectedDate,
+
+    Switch(
+        Weekday(
+            varSelectedDate,
+            StartOfWeek.Monday
+        ),
+
+        1,
+            DateAdd(
+                varSelectedDate,
+                -3,
+                TimeUnit.Days
+            ),
+
+        DateAdd(
+            varSelectedDate,
+            -1,
+            TimeUnit.Days
+        )
+    )
+);
+
+Set(varResetView, true);
+
+Reset(dpPresenceDate);
+
+Select(btnBuildChart);
+
+// ======================================================================
+// SECTION 9B — btnNextDay.OnSelect
+// ======================================================================
+
+Set(
+    varSelectedDate,
+
+    Switch(
+        Weekday(
+            varSelectedDate,
+            StartOfWeek.Monday
+        ),
+
+        5,
+            DateAdd(
+                varSelectedDate,
+                3,
+                TimeUnit.Days
+            ),
+
+        DateAdd(
+            varSelectedDate,
+            1,
+            TimeUnit.Days
+        )
+    )
+);
+
+Set(varResetView, true);
+
+Reset(dpPresenceDate);
+
+Select(btnBuildChart);

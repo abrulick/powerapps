@@ -1,0 +1,84 @@
+// ======================================================================
+// SECTION 1 — scrOrgChart.OnVisible
+// ======================================================================
+
+If(
+    IsBlank(varSelectedDate),
+
+    Set(
+        varSelectedDate,
+        With(
+            {
+                wd:
+                    Weekday(
+                        Today(),
+                        StartOfWeek.Monday
+                    )
+            },
+
+            If(
+                wd <= 5,
+                Today(),
+                DateAdd(
+                    Today(),
+                    5 - wd,
+                    TimeUnit.Days
+                )
+            )
+        )
+    )
+);
+
+Set(varNodeWidth, 220);
+Set(varNodeHeight, 92);
+Set(varXGap, 44);
+Set(varYGap, 76);
+Set(varChartMargin, 50);
+
+// IMPORTANT:
+// Match this value to the Canvas App:
+// Settings > General > Data row limit.
+// 500 is the Power Apps default.
+Set(varLocalRowSafetyLimit, 500);
+
+// Use the SharePoint Choice metadata as the canonical office list.
+// This keeps all configured offices available even when nobody is
+// scheduled there on the selected day.
+ClearCollect(
+    colLocationOptions,
+    {
+        Value: "All Locations"
+    }
+);
+
+Collect(
+    colLocationOptions,
+    Sort(
+        Choices(
+            'Check-in'.'Location (Mon)'
+        ),
+        Value,
+        SortOrder.Ascending
+    )
+);
+
+If(
+    IsBlank(varLocationFilter),
+    Set(varLocationFilter, "All Locations")
+);
+
+If(
+    IsBlank(varZoom),
+    Set(varZoom, 1)
+);
+
+If(
+    IsBlank(varSelectedEmployeeKey),
+    Set(varSelectedEmployeeKey, Blank())
+);
+
+Set(varResetView, true);
+Set(varChartError, Blank());
+Set(varChartBuilding, false);
+
+Select(btnBuildChart);
