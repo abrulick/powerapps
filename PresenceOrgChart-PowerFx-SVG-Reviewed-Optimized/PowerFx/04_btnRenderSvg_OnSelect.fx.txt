@@ -1,0 +1,471 @@
+// ======================================================================
+// SECTION 4 — btnRenderSvg.OnSelect
+// ======================================================================
+
+If(
+    CountRows(colLayout) = 0,
+
+    Set(
+        varOrgChartSvg,
+        Blank()
+    ),
+
+
+    // ------------------------------------------------------------------
+    // 4.1 Viewport dimensions.
+    //
+    // varZoom minimum is 1:
+    //   1 = Fit All / complete chart
+    //   >1 = zoomed in
+    // ------------------------------------------------------------------
+
+    Set(
+        varViewportWidth,
+        varChartWidth / varZoom
+    );
+
+    Set(
+        varViewportHeight,
+        varChartHeight / varZoom
+    );
+
+    Set(
+        varViewLeft,
+
+        Max(
+            0,
+
+            Min(
+                Max(
+                    0,
+                    varChartWidth -
+                    varViewportWidth
+                ),
+
+                varViewCenterX -
+                varViewportWidth / 2
+            )
+        )
+    );
+
+    Set(
+        varViewTop,
+
+        Max(
+            0,
+
+            Min(
+                Max(
+                    0,
+                    varChartHeight -
+                    varViewportHeight
+                ),
+
+                varViewCenterY -
+                varViewportHeight / 2
+            )
+        )
+    );
+
+
+    // ------------------------------------------------------------------
+    // 4.2 Connector SVG.
+    // ------------------------------------------------------------------
+
+    Set(
+        varSvgConnectors,
+
+        Concat(
+            Filter(
+                colLayout As child,
+
+                !IsBlank(
+                    LookUp(
+                        colLayout,
+                        EmployeeKey =
+                            child.ManagerKey,
+                        EmployeeKey
+                    )
+                )
+            ),
+
+            With(
+                {
+                    parent:
+                        LookUp(
+                            colLayout,
+                            EmployeeKey =
+                                child.ManagerKey
+                        )
+                },
+
+                With(
+                    {
+                        startX:
+                            parent.NodeX,
+
+                        startY:
+                            parent.NodeY +
+                            varNodeHeight,
+
+                        endX:
+                            child.NodeX,
+
+                        endY:
+                            child.NodeY,
+
+                        midY:
+                            (
+                                parent.NodeY +
+                                varNodeHeight +
+                                child.NodeY
+                            ) / 2
+                    },
+
+                    "<path d='M " &
+                    Text(
+                        startX,
+                        "[$-en-US]0.##"
+                    ) &
+                    " " &
+                    Text(
+                        startY,
+                        "[$-en-US]0.##"
+                    ) &
+                    " C " &
+                    Text(
+                        startX,
+                        "[$-en-US]0.##"
+                    ) &
+                    " " &
+                    Text(
+                        midY,
+                        "[$-en-US]0.##"
+                    ) &
+                    ", " &
+                    Text(
+                        endX,
+                        "[$-en-US]0.##"
+                    ) &
+                    " " &
+                    Text(
+                        midY,
+                        "[$-en-US]0.##"
+                    ) &
+                    ", " &
+                    Text(
+                        endX,
+                        "[$-en-US]0.##"
+                    ) &
+                    " " &
+                    Text(
+                        endY,
+                        "[$-en-US]0.##"
+                    ) &
+                    "' fill='none' stroke='#B8B8B8' stroke-width='2' />"
+                )
+            )
+        )
+    );
+
+
+    // ------------------------------------------------------------------
+    // 4.3 Employee node SVG.
+    // ------------------------------------------------------------------
+
+    Set(
+        varSvgNodes,
+
+        Concat(
+            colLayout As node,
+
+            With(
+                {
+                    cardX:
+                        node.NodeX -
+                        varNodeWidth / 2,
+
+                    cardY:
+                        node.NodeY,
+
+                    statusColor:
+                        Switch(
+                            node.PresenceStatus,
+                            "In-Person", "#107C10",
+                            "Remote", "#0078D4",
+                            "Vacation", "#8764B8",
+                            "Sick", "#D83B01",
+                            "Holiday", "#5C2D91",
+                            "Location Missing", "#A4262C",
+                            "#605E5C"
+                        ),
+
+                    selected:
+                        node.EmployeeKey =
+                        varSelectedEmployeeKey,
+
+                    locationMatch:
+                        varLocationFilter =
+                            "All Locations" ||
+
+                        (
+                            node.WorkType =
+                                "In-Person" &&
+                            node.WorkLocation =
+                                varLocationFilter
+                        ),
+
+                    displayName:
+                        If(
+                            Len(node.EmployeeName) > 28,
+                            Left(
+                                node.EmployeeName,
+                                27
+                            ) &
+                            "…",
+                            node.EmployeeName
+                        ),
+
+                    displayPresence:
+                        If(
+                            Len(node.PresenceText) > 33,
+                            Left(
+                                node.PresenceText,
+                                32
+                            ) &
+                            "…",
+                            node.PresenceText
+                        )
+                },
+
+                With(
+                    {
+                        nodeOpacity:
+                            If(
+                                selected,
+                                1,
+
+                                varLocationFilter =
+                                    "All Locations",
+                                1,
+
+                                locationMatch,
+                                1,
+
+                                0.25
+                            ),
+
+                        cardFill:
+                            If(
+                                selected,
+                                "#EFF6FC",
+                                "#FFFFFF"
+                            ),
+
+                        cardStroke:
+                            If(
+                                selected,
+                                "#0078D4",
+                                "#D2D0CE"
+                            ),
+
+                        cardStrokeWidth:
+                            If(
+                                selected,
+                                "4",
+                                "1"
+                            )
+                    },
+
+                    "<g opacity='" &
+                    Text(
+                        nodeOpacity,
+                        "[$-en-US]0.00"
+                    ) &
+                    "'>" &
+
+                    "<rect x='" &
+                    Text(
+                        cardX,
+                        "[$-en-US]0.##"
+                    ) &
+                    "' y='" &
+                    Text(
+                        cardY,
+                        "[$-en-US]0.##"
+                    ) &
+                    "' width='" &
+                    Text(
+                        varNodeWidth,
+                        "[$-en-US]0.##"
+                    ) &
+                    "' height='" &
+                    Text(
+                        varNodeHeight,
+                        "[$-en-US]0.##"
+                    ) &
+                    "' rx='10' fill='" &
+                    cardFill &
+                    "' stroke='" &
+                    cardStroke &
+                    "' stroke-width='" &
+                    cardStrokeWidth &
+                    "' />" &
+
+                    "<rect x='" &
+                    Text(
+                        cardX,
+                        "[$-en-US]0.##"
+                    ) &
+                    "' y='" &
+                    Text(
+                        cardY,
+                        "[$-en-US]0.##"
+                    ) &
+                    "' width='7' height='" &
+                    Text(
+                        varNodeHeight,
+                        "[$-en-US]0.##"
+                    ) &
+                    "' rx='4' fill='" &
+                    statusColor &
+                    "' />" &
+
+                    "<text x='" &
+                    Text(
+                        cardX + 18,
+                        "[$-en-US]0.##"
+                    ) &
+                    "' y='" &
+                    Text(
+                        cardY + 27,
+                        "[$-en-US]0.##"
+                    ) &
+                    "' font-family='Segoe UI,Arial,sans-serif' " &
+                    "font-size='15' font-weight='600' fill='#201F1E'>" &
+                    EncodeHTML(displayName) &
+                    "</text>" &
+
+                    "<text x='" &
+                    Text(
+                        cardX + 18,
+                        "[$-en-US]0.##"
+                    ) &
+                    "' y='" &
+                    Text(
+                        cardY + 53,
+                        "[$-en-US]0.##"
+                    ) &
+                    "' font-family='Segoe UI,Arial,sans-serif' " &
+                    "font-size='12' fill='#323130'>" &
+                    EncodeHTML(displayPresence) &
+                    "</text>" &
+
+                    "<text x='" &
+                    Text(
+                        cardX + 18,
+                        "[$-en-US]0.##"
+                    ) &
+                    "' y='" &
+                    Text(
+                        cardY + 76,
+                        "[$-en-US]0.##"
+                    ) &
+                    "' font-family='Segoe UI,Arial,sans-serif' " &
+                    "font-size='11' fill='#605E5C'>" &
+                    EncodeHTML(
+                        If(
+                            node.DirectReportCount = 0,
+                            "Individual contributor",
+                            Text(
+                                node.DirectReportCount
+                            ) &
+                            If(
+                                node.DirectReportCount = 1,
+                                " direct report",
+                                " direct reports"
+                            )
+                        )
+                    ) &
+                    "</text>" &
+
+                    "</g>"
+                )
+            )
+        )
+    );
+
+
+    // ------------------------------------------------------------------
+    // 4.4 Assemble SVG with dynamic viewBox.
+    // ------------------------------------------------------------------
+
+    Set(
+        varOrgChartSvg,
+
+        "<svg xmlns='http://www.w3.org/2000/svg' " &
+        "width='" &
+        Text(
+            varChartWidth,
+            "[$-en-US]0.##"
+        ) &
+        "' height='" &
+        Text(
+            varChartHeight,
+            "[$-en-US]0.##"
+        ) &
+        "' viewBox='" &
+        Text(
+            varViewLeft,
+            "[$-en-US]0.##"
+        ) &
+        " " &
+        Text(
+            varViewTop,
+            "[$-en-US]0.##"
+        ) &
+        " " &
+        Text(
+            varViewportWidth,
+            "[$-en-US]0.##"
+        ) &
+        " " &
+        Text(
+            varViewportHeight,
+            "[$-en-US]0.##"
+        ) &
+        "'>" &
+
+        "<rect x='" &
+        Text(
+            varViewLeft,
+            "[$-en-US]0.##"
+        ) &
+        "' y='" &
+        Text(
+            varViewTop,
+            "[$-en-US]0.##"
+        ) &
+        "' width='" &
+        Text(
+            varViewportWidth,
+            "[$-en-US]0.##"
+        ) &
+        "' height='" &
+        Text(
+            varViewportHeight,
+            "[$-en-US]0.##"
+        ) &
+        "' fill='#FAFAFA' />" &
+
+        varSvgConnectors &
+        varSvgNodes &
+
+        "</svg>"
+    );
+
+    Set(
+        varSvgLength,
+        Len(varOrgChartSvg)
+    )
+);

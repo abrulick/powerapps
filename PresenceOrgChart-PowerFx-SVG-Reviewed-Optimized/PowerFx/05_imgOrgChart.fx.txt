@@ -1,0 +1,29 @@
+// ======================================================================
+// SECTION 5A — imgOrgChart.Image
+// ======================================================================
+
+If(
+    IsBlank(varOrgChartSvg),
+    Blank(),
+
+    "data:image/svg+xml;utf8," &
+    EncodeUrl(
+        varOrgChartSvg
+    )
+)
+
+// ======================================================================
+// SECTION 5B — imgOrgChart.ImagePosition
+// ======================================================================
+
+ImagePosition.Fit
+
+// ======================================================================
+// SECTION 5C — imgOrgChart.AccessibleLabel
+// ======================================================================
+
+"Presence-aware organization chart for " &
+Text(
+    varSelectedDate,
+    "[$-en-US]dddd, mmmm d, yyyy"
+)

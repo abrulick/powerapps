@@ -1,0 +1,18 @@
+// ======================================================================
+// SECTION 2A — dpPresenceDate.DefaultDate
+// ======================================================================
+
+varSelectedDate
+
+// ======================================================================
+// SECTION 2B — dpPresenceDate.OnChange
+// ======================================================================
+
+Set(
+    varSelectedDate,
+    dpPresenceDate.SelectedDate
+);
+
+Set(varResetView, true);
+
+Select(btnBuildChart);

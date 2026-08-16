@@ -1,0 +1,43 @@
+// ======================================================================
+// SECTION 11 — PRESENCE COUNTERS
+// ======================================================================
+
+// lblInPersonCount.Text
+Text(
+    CountIf(
+        colPresenceUnique,
+        PresenceStatus = "In-Person"
+    )
+)
+
+// lblRemoteCount.Text
+Text(
+    CountIf(
+        colPresenceUnique,
+        PresenceStatus = "Remote"
+    )
+)
+
+// lblVacationCount.Text
+Text(
+    CountIf(
+        colPresenceUnique,
+        PresenceStatus = "Vacation"
+    )
+)
+
+// lblSickCount.Text
+Text(
+    CountIf(
+        colPresenceUnique,
+        PresenceStatus = "Sick"
+    )
+)
+
+// lblHolidayCount.Text
+Text(
+    CountIf(
+        colPresenceUnique,
+        PresenceStatus = "Holiday"
+    )
+)

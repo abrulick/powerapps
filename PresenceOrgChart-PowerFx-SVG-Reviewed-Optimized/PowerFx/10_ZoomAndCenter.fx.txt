@@ -1,0 +1,97 @@
+// ======================================================================
+// SECTION 10A — btnZoomIn.OnSelect
+// ======================================================================
+
+Set(
+    varZoom,
+    Min(
+        3,
+        varZoom * 1.25
+    )
+);
+
+Select(btnRenderSvg);
+
+// ======================================================================
+// SECTION 10B — btnZoomOut.OnSelect
+// ======================================================================
+
+Set(
+    varZoom,
+    Max(
+        1,
+        varZoom / 1.25
+    )
+);
+
+Select(btnRenderSvg);
+
+// ======================================================================
+// SECTION 10C — btnFitAll.OnSelect
+// ======================================================================
+
+Set(varZoom, 1);
+
+Set(
+    varViewCenterX,
+    varChartWidth / 2
+);
+
+Set(
+    varViewCenterY,
+    varChartHeight / 2
+);
+
+Select(btnRenderSvg);
+
+// ======================================================================
+// SECTION 10D — btnCenterSelection.OnSelect
+// ======================================================================
+
+With(
+    {
+        selectedNode:
+            LookUp(
+                colLayout,
+                EmployeeKey =
+                    varSelectedEmployeeKey
+            )
+    },
+
+    If(
+        !IsBlank(
+            selectedNode.EmployeeKey
+        ),
+
+        Set(
+            varViewCenterX,
+            selectedNode.NodeX
+        );
+
+        Set(
+            varViewCenterY,
+            selectedNode.NodeY +
+            varNodeHeight / 2
+        );
+
+        Set(
+            varZoom,
+            Max(
+                1.5,
+                varZoom
+            )
+        );
+
+        Select(btnRenderSvg)
+    )
+)
+
+// ======================================================================
+// SECTION 10E — btnCenterSelection.DisplayMode
+// ======================================================================
+
+If(
+    IsBlank(varSelectedEmployeeKey),
+    DisplayMode.Disabled,
+    DisplayMode.Edit
+)

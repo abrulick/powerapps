@@ -1,0 +1,97 @@
+// ======================================================================
+// SECTION 7 — SELECTED EMPLOYEE DETAIL LABELS
+// ======================================================================
+
+// ----------------------------------------------------------------------
+// lblSelectedName.Text
+// ----------------------------------------------------------------------
+
+LookUp(
+    colPresenceUnique,
+    EmployeeKey =
+        varSelectedEmployeeKey,
+    EmployeeName
+)
+
+
+// ----------------------------------------------------------------------
+// lblSelectedEmail.Text
+// ----------------------------------------------------------------------
+
+LookUp(
+    colPresenceUnique,
+    EmployeeKey =
+        varSelectedEmployeeKey,
+    EmployeeKey
+)
+
+
+// ----------------------------------------------------------------------
+// lblSelectedManager.Text
+// ----------------------------------------------------------------------
+
+With(
+    {
+        managerName:
+            LookUp(
+                colPresenceUnique,
+                EmployeeKey =
+                    varSelectedEmployeeKey,
+                ManagerName
+            )
+    },
+
+    If(
+        IsBlank(managerName),
+        "Manager: —",
+        "Manager: " &
+        managerName
+    )
+)
+
+
+// ----------------------------------------------------------------------
+// lblSelectedPresence.Text
+// ----------------------------------------------------------------------
+
+LookUp(
+    colPresenceUnique,
+    EmployeeKey =
+        varSelectedEmployeeKey,
+    PresenceText
+)
+
+
+// ----------------------------------------------------------------------
+// lblSelectedReports.Text
+// ----------------------------------------------------------------------
+
+With(
+    {
+        n:
+            CountIf(
+                colOrgNodes,
+                ManagerKey =
+                    varSelectedEmployeeKey
+            )
+    },
+
+    If(
+        IsBlank(varSelectedEmployeeKey),
+        "",
+
+        Text(n) &
+        If(
+            n = 1,
+            " direct report",
+            " direct reports"
+        )
+    )
+)
+
+
+// ----------------------------------------------------------------------
+// conEmployeeDetail.Visible
+// ----------------------------------------------------------------------
+
+!IsBlank(varSelectedEmployeeKey)
